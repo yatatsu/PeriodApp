@@ -54,6 +54,7 @@ class PeriodList extends Component {
     return (
       <Content>
         <FlatList
+          style={{ backgroundColor: '#ffffff' }}
           data={this.state.periods}
           keyExtractor={(item, i) => `${item.id}`}
           renderItem={({ item }) => (

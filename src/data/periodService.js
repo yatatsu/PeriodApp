@@ -39,7 +39,7 @@ const PeriodService = {
         period.id = (period.id == null) ? generateUuid() : period.id;
         period.updated = new Date();
         repository.write(() => {
-          const newPeriod = repository.create('Period', period);
+          const newPeriod = repository.create('Period', period, true);
           console.log('save -> %s', newPeriod);
           resolve(newPeriod);
         });

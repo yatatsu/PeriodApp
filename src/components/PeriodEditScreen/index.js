@@ -22,10 +22,12 @@ import PeriodService from '../../data/periodService';
 class PeriodEdit extends Component {
   constructor(props) {
     super(props);
+    const exists = props.item;
+    this.id = exists == null ? null : exists.id;
     this.state = {
-      title: '',
-      description: '',
-      period: '',
+      title: exists == null ? '' : exists.title,
+      description: exists == null ? '' : exists.description,
+      period: exists == null ? '' : exists.period,
     };
   }
 
@@ -43,7 +45,7 @@ class PeriodEdit extends Component {
           </Button>
         </Left>
         <Body>
-          <Title>New period</Title>
+          <Title>Edit period</Title>
         </Body>
         <Right />
       </Header>
@@ -87,6 +89,7 @@ class PeriodEdit extends Component {
           style={{ margin: 16 }}
           onPress={() => {
             PeriodService.save({
+              id: this.id,
               title: this.state.title,
               description: this.state.description,
               period: this.state.period,
