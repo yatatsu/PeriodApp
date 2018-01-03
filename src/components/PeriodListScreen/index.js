@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-  View,
   FlatList,
 } from 'react-native';
 import {
@@ -16,7 +15,7 @@ import {
 } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import PeriodListItem from './PeriodListItem';
-import { loadPeriods } from '../../data/periodStorage';
+import PeriodService from '../../data/periodService';
 
 class PeriodList extends Component {
   constructor(props) {
@@ -27,10 +26,16 @@ class PeriodList extends Component {
   }
 
   componentDidMount() {
-    loadPeriods().then((data) => {
-      console.log(data);
-      this.setState({ periods: data });
-    });
+    PeriodService.addChangeListener(() => this.loadPeriods());
+    this.loadPeriods();
+  }
+
+  componentWillUnmount() {
+    PeriodService.removeListeners();
+  }
+
+  loadPeriods() {
+    this.setState({ periods: PeriodService.findAll() });
   }
 
   headerComponent() {
@@ -50,7 +55,7 @@ class PeriodList extends Component {
       <Content>
         <FlatList
           data={this.state.periods}
-          keyExtractor={(item, i) => `${i}`}
+          keyExtractor={(item, i) => `${item.id}`}
           renderItem={({ item }) => (
             <PeriodListItem item={item} />
           )}
@@ -61,18 +66,16 @@ class PeriodList extends Component {
 
   fabComponent() {
     return (
-      <View style={{ flex: 1 }}>
-        <Fab
-          onPress={() => {
-            Actions.editPeriod();
-          }}
-          containerStyle={{ }}
-          style={{ backgroundColor: '#5067FF' }}
-          position="bottomRight"
-        >
-          <Icon name="add" />
-        </Fab>
-      </View>
+      <Fab
+        onPress={() => {
+          Actions.editPeriod();
+        }}
+        containerStyle={{ }}
+        style={{ backgroundColor: '#5067FF' }}
+        position="bottomRight"
+      >
+        <Icon name="add" />
+      </Fab>
     );
   }
 

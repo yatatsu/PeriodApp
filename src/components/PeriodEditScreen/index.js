@@ -17,7 +17,7 @@ import {
   Text,
 } from 'native-base';
 import { Actions } from 'react-native-router-flux';
-import { savePeriod } from '../../data/periodStorage';
+import PeriodService from '../../data/periodService';
 
 class PeriodEdit extends Component {
   constructor(props) {
@@ -86,7 +86,7 @@ class PeriodEdit extends Component {
           block
           style={{ margin: 16 }}
           onPress={() => {
-            savePeriod({
+            PeriodService.save({
               title: this.state.title,
               description: this.state.description,
               period: this.state.period,
