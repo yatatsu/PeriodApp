@@ -16,8 +16,23 @@ import {
 } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import PeriodListItem from './PeriodListItem';
+import { loadPeriods } from '../../data/periodStorage';
 
 class PeriodList extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      periods: [],
+    };
+  }
+
+  componentDidMount() {
+    loadPeriods().then((data) => {
+      console.log(data);
+      this.setState({ periods: data });
+    });
+  }
+
   headerComponent() {
     return (
       <Header>
@@ -34,11 +49,7 @@ class PeriodList extends Component {
     return (
       <Content>
         <FlatList
-          data={[
-            { title: 'a', period: '2017-12-30' },
-            { title: 'b', period: '2018-01-02' },
-            { title: 'c', period: '2018-02-11' },
-          ]}
+          data={this.state.periods}
           keyExtractor={(item, i) => `${i}`}
           renderItem={({ item }) => (
             <PeriodListItem item={item} />

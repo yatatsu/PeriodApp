@@ -17,6 +17,7 @@ import {
   Text,
 } from 'native-base';
 import { Actions } from 'react-native-router-flux';
+import { savePeriod } from '../../data/periodStorage';
 
 class PeriodEdit extends Component {
   constructor(props) {
@@ -85,15 +86,26 @@ class PeriodEdit extends Component {
           block
           style={{ margin: 16 }}
           onPress={() => {
-            Alert.alert(
-              this.state.title,
-              this.state.description,
-              [
-                { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
-                { text: 'OK', onPress: () => console.log('OK Pressed') },
-              ],
-              { cancelable: false },
-            );
+            savePeriod({
+              title: this.state.title,
+              description: this.state.description,
+              period: this.state.period,
+            }).then(() => {
+              Alert.alert(
+                '',
+                'saved!!',
+                [
+                  {
+                    text: 'OK',
+                    onPress: () => {
+                      Actions.pop();
+                      console.log('OK Pressed');
+                    },
+                  },
+                ],
+                { cancelable: false },
+              );
+            });
           }}
         >
           <Text>UPDATE</Text>
