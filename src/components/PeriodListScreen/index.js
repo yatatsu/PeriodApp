@@ -35,7 +35,7 @@ class PeriodList extends Component {
   }
 
   loadPeriods() {
-    this.setState({ periods: PeriodService.findAll() });
+    this.setState({ periods: PeriodService.findAllActive() });
   }
 
   headerComponent() {

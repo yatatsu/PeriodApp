@@ -31,6 +31,51 @@ class PeriodEdit extends Component {
     };
   }
 
+  _savePeriod() {
+    PeriodService.save({
+      id: this.id,
+      title: this.state.title,
+      description: this.state.description,
+      period: this.state.period,
+    }).then(() => {
+      Alert.alert(
+        '',
+        'saved!!',
+        [
+          { text: 'OK', onPress: () => Actions.pop() },
+        ],
+        { cancelable: false },
+      );
+    });
+  }
+
+  _confirmArchivePeriod() {
+    if (this.id != null) {
+      Alert.alert(
+        'Confirmation',
+        'Are you sure to archive item?',
+        [
+          { text: 'Cancel' },
+          { text: 'Archive', onPress: () => this._archivePeriod() },
+        ],
+        { cancelable: false },
+      );
+    }
+  }
+
+  _archivePeriod() {
+    PeriodService.archive(this.id).then(() => {
+      Alert.alert(
+        '',
+        'archived!!',
+        [
+          { text: 'OK', onPress: () => Actions.pop() },
+        ],
+        { cancelable: false },
+      );
+    });
+  }
+
   headerComponent() {
     return (
       <Header>
@@ -87,31 +132,23 @@ class PeriodEdit extends Component {
         <Button
           block
           style={{ margin: 16 }}
-          onPress={() => {
-            PeriodService.save({
-              id: this.id,
-              title: this.state.title,
-              description: this.state.description,
-              period: this.state.period,
-            }).then(() => {
-              Alert.alert(
-                '',
-                'saved!!',
-                [
-                  {
-                    text: 'OK',
-                    onPress: () => {
-                      Actions.pop();
-                      console.log('OK Pressed');
-                    },
-                  },
-                ],
-                { cancelable: false },
-              );
-            });
-          }}
+          onPress={() => this._savePeriod()}
+          disabled={
+            this.state.title.length === 0 ||
+            this.state.description.length === 0 ||
+            this.state.period.length === 0
+          }
         >
           <Text>UPDATE</Text>
+        </Button>
+        <Button
+          block
+          danger
+          style={{ marginHorizontal: 16 }}
+          onPress={() => this._confirmArchivePeriod()}
+          disabled={this.id == null}
+        >
+          <Text>ARCHIVE</Text>
         </Button>
       </Content>
     );

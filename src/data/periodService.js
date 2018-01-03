@@ -9,6 +9,7 @@ const PeriodSchema = {
     description: 'string',
     period: 'string',
     updated: 'date',
+    archived: { type: 'bool', default: false },
   },
 };
 
@@ -40,7 +41,7 @@ const PeriodService = {
         period.updated = new Date();
         repository.write(() => {
           const newPeriod = repository.create('Period', period, true);
-          console.log('save -> %s', newPeriod);
+          console.log('save -> %s', JSON.stringify(newPeriod));
           resolve(newPeriod);
         });
       } catch (e) {
@@ -48,7 +49,26 @@ const PeriodService = {
       }
     });
   },
-  findAll: () => repository.objects('Period').sorted('updated', true),
+  archive: (id) => {
+    console.log(id);
+    return new Promise((resolve, reject) => {
+      try {
+        const target = repository.objectForPrimaryKey('Period', id);
+        if (target == null) {
+          reject(Error('target not found.'));
+        }
+        repository.write(() => {
+          target.archived = true;
+          resolve(target);
+        });
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
+  findAllActive: () => repository.objects('Period')
+    .filtered('archived == false')
+    .sorted('updated', true),
   addChangeListener: (listener) => {
     repository.addListener('change', listener);
   },
